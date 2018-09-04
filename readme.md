@@ -1,1 +1,4 @@
 # Tensorflow Tutorial
+
+## Environment
+- venv

@@ -8,7 +8,7 @@
 - tensorflow
 - matplotlib
 
-(to install scikit-learn)
+(Following packages, to install scikit-learn)
 - scipy
 - pandas
 - numpy

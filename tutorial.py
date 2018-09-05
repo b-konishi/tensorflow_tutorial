@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 w = 0.1
 b = 0.3
 
-x_data = np.random.rand(100).astype(np.float32)
-# x_data = np.linspace(-10, 10, num=100).astype(np.float32)
+# x_data = np.random.rand(100).astype(np.float32)
+x_data = np.linspace(-1, 1, num=100).astype(np.float32)
 y_data = w * x_data + b
 
 # "tf.zeros([1])" is same as "tf.zeros(1)"

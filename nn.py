@@ -21,23 +21,38 @@ R = 3
 
 sess = tf.InteractiveSession()
 
-X = tf.placeholder(dtype = tf.float32, shape = [None, Q])
-t = tf.placeholder(dtype = tf.float32, shape = [None, R])
+X = tf.placeholder(dtype = tf.float32, shape = [None, Q], name='X')
+t = tf.placeholder(dtype = tf.float32, shape = [None, R], name='t')
 
-W1 = weight(shape = [Q, P])
-b1 = bias(shape = [P])
-f1 = tf.matmul(X, W1) + b1
-sigm = tf.nn.sigmoid(f1)
 
-W2 = weight(shape = [P, R])
-b2 = bias(shape = [R])
-f2 = tf.matmul(sigm, W2) + b2
-f = tf.nn.softmax(f2)
+with tf.name_scope('layer1'):
+    W1 = weight(shape = [Q, P])
+    b1 = bias(shape = [P])
+    f1 = tf.matmul(X, W1) + b1
+    sigm = tf.nn.sigmoid(f1)
+    tf.summary.scalar('sigm', sigm[1,1])
 
-loss = loss(t, f)
+with tf.name_scope('layer2'):
+    W2 = weight(shape = [P, R])
+    b2 = bias(shape = [R])
+    f2 = tf.matmul(sigm, W2) + b2
+    f = tf.nn.softmax(f2)
+
+with tf.name_scope('compute_loss'):
+    loss = loss(t, f)
+    tf.summary.scalar('loss', loss)
+
+# Merge summary
+merged = tf.summary.merge_all()
 
 optimizer = tf.train.GradientDescentOptimizer(learning_rate = 0.001)
 train_step = optimizer.minimize(loss)
+
+# Tensorboard logfile
+if tf.gfile.Exists('./logdir'):
+    tf.gfile.DeleteRecursively('./logdir')
+writer = tf.summary.FileWriter('./logdir', sess.graph)
+
 
 init = tf.global_variables_initializer()
 sess.run(init) ## TensorFlowの世界を初期化(必ず必要)
@@ -53,12 +68,12 @@ num_epoch = 1000
 for epoch in range(num_epoch):
     sess.run(train_step, feed_dict = {X: train_x, t: train_t})
     if epoch % 100 == 0:
-        train_loss = sess.run(loss, feed_dict = {X: train_x, t: train_t})
-        h = sess.run(sigm, feed_dict = {X: train_x, t: train_t})
+        summary, train_loss, h = sess.run([merged, loss, sigm], feed_dict = {X: train_x, t: train_t})
+        writer.add_summary(summary, epoch)
         print('epoch : {}, loss:{}'.format(epoch, train_loss))
-        plt.scatter(epoch, train_loss, c='black', s=10)
+        # plt.scatter(epoch, train_loss, c='black', s=10)
 
-plt.show()
+# plt.show()
 
 
 

@@ -36,8 +36,18 @@ summary = sess.run(merged)
 writer.add_summary(summary, epoch)
 ```
 
+### graphs
+Tensorboard can show computing-graphs.
+As much as possible, you had better to name to variable.
+How to name to variables is the following code.
+You should write the code 'name='xxx'' in the arguments.
+
+```python
+X = tf.placeholder(dtype=tf.float32, shape=[None,p], name='X')
+```
+
 ### histograms
-Histogram can show the value of tensor in the valuable.
+Histogram can show the value of tensor in the variable.
 As histogram goes to front, time passes.
 The horizontal axis indicates value of the tensor.
 The value which focucing in your mouse indicates the value's frequency.

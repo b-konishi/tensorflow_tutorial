@@ -16,3 +16,5 @@
 ## caution
 TensorBoard cannot function on venv.
 When it uses, venv must be deactivated.
+
+Laboratory is OK.

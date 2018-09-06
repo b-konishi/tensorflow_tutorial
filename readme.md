@@ -22,7 +22,7 @@ Histogram can show the value of tensor in the valuable.
 As histogram goes to front, time passes.
 The horizontal axis indicates value of the tensor.
 The value which focucing in your mouse indicates the value's frequency.
-'''
-tf.summary.histogram('name', name)
-'''
 
+```
+tf.summary.histogram('name', name)
+```

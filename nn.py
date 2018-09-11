@@ -30,15 +30,20 @@ with tf.name_scope('layer1'):
     b1 = bias(shape = [P])
     f1 = tf.matmul(X, W1) + b1
     sigm = tf.nn.sigmoid(f1)
-    tf.summary.scalar('sigm', sigm[1,1])
+    tf.summary.histogram('W1', W1)
+    tf.summary.histogram('b1', b1)
+    tf.summary.histogram('sigm', sigm)
 
 with tf.name_scope('layer2'):
     W2 = weight(shape = [P, R])
     b2 = bias(shape = [R])
     f2 = tf.matmul(sigm, W2) + b2
     f = tf.nn.softmax(f2)
+    tf.summary.histogram('W2', W2)
+    tf.summary.histogram('b2', b2)
+    tf.summary.histogram('f', f)
 
-with tf.name_scope('compute_loss'):
+with tf.name_scope('loss'):
     loss = loss(t, f)
     tf.summary.scalar('loss', loss)
 
@@ -68,7 +73,7 @@ num_epoch = 1000
 for epoch in range(num_epoch):
     sess.run(train_step, feed_dict = {X: train_x, t: train_t})
     if epoch % 100 == 0:
-        summary, train_loss, h = sess.run([merged, loss, sigm], feed_dict = {X: train_x, t: train_t})
+        summary, train_loss = sess.run([merged, loss], feed_dict = {X: train_x, t: train_t})
         writer.add_summary(summary, epoch)
         print('epoch : {}, loss:{}'.format(epoch, train_loss))
         # plt.scatter(epoch, train_loss, c='black', s=10)
